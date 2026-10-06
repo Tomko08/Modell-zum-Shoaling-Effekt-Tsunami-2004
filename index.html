@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#092a36">
+    <meta name="description" content="Erkunde interaktiv, wie ein Tsunami in flacherem Wasser langsamer, kürzer und höher wird. Ein vereinfachtes physikalisches Modell des Shoaling-Effekts.">
+    <title>Shoaling Lab · Eine Welle auf dem Weg zur Küste</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23092a36'/%3E%3Cpath d='M4 19Q10 5 16 19T28 19' fill='none' stroke='%23bef264' stroke-width='3'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+    <script src="physics.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#simulation">Zur Simulation</a>
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="Shoaling Lab Startseite">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 12c4-5 8-5 12 0s8 5 12 0M4 20c4-5 8-5 12 0s8 5 12 0"/></svg></span>
+        <span>Shoaling<span class="brand-light"> Lab</span><span class="brand-dot">.</span></span>
+      </a>
+      <nav aria-label="Hauptnavigation">
+        <a class="nav-active" href="#simulation">Simulation</a>
+        <a href="#modell">Das Modell <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M4 4h8v8"/></svg></a>
+      </nav>
+      <span class="header-caption"><span></span> WISSEN IN BEWEGUNG</span>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow"><span></span> TSUNAMIS VERSTEHEN</p>
+          <h1 id="page-title">Je flacher das Wasser,<br>desto höher die Welle.</h1>
+          <p class="intro-description">Begleite eine Welle vom offenen Ozean bis zur Küste.<br class="desktop-break"> Entdecke den Shoaling-Effekt, Schritt für Schritt.</p>
+          <p class="comparison-entry"><a href="vergleich.html">Neu: Banda Aceh und Sri Lanka vergleichen <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M8 3l5 5-5 5"/></svg></a></p>
+        </div>
+        <div class="intro-aside">
+          <svg viewBox="0 0 80 42" aria-hidden="true"><path d="M2 30Q18 21 34 30T66 30"/><path d="M32 30Q48 2 64 30T78 30"/><path class="icon-floor" d="M2 39H40L78 18"/></svg>
+          <span>Ein Prinzip.<br><strong>Drei Veränderungen.</strong></span>
+        </div>
+      </section>
+
+      <section id="simulation" class="workspace" aria-label="Interaktive Shoaling-Simulation">
+        <div class="visual-column">
+          <section class="ocean-card" aria-labelledby="scene-title">
+            <header class="scene-header">
+              <div><span class="scene-eyebrow">DER WEG DER WELLE</span><h2 id="scene-title">Vom Ozean zur Küste</h2></div>
+              <span id="status" class="status-chip" role="status"><span></span><span id="status-text">Bereit</span></span>
+            </header>
+            <div class="canvas-wrap">
+              <canvas id="ocean" role="img" aria-label="Schematischer Querschnitt durch den Ozean mit einer zur Küste wandernden Tsunamiwelle."></canvas>
+              <div class="scene-legend"><span><i class="wave-key"></i>Wasseroberfläche</span><span><i class="crest-key"></i>Verfolgter Wellenberg</span></div>
+              <span class="scale-note">Schematisch · Höhe stark überzeichnet</span>
+            </div>
+            <div class="timeline">
+              <div class="timeline-heading"><label for="progress">Wellenposition</label><output id="journey-time" for="progress">0:00 / 63:20 min</output></div>
+              <input id="progress" class="progress-range" type="range" min="0" max="1000" value="0" step="1" aria-label="Wellenposition auf der Reise zur Küste">
+              <div class="timeline-labels"><span>Tiefsee <b>4.000 m</b></span><span id="position-text">0 km von 300 km</span><span>Küste <b>20 m</b></span></div>
+            </div>
+          </section>
+
+          <div class="metrics" aria-label="Modellwerte am verfolgten Wellenberg">
+            <article class="metric"><div class="metric-label"><span>Geschwindigkeit</span><span class="metric-symbol">c</span></div><p><output id="speed-value">713</output><span>km/h</span></p><div class="metric-change"><svg class="direction" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 3 10 10M5 13h8V5"/></svg><span id="speed-change">0 % langsamer</span></div></article>
+            <article class="metric"><div class="metric-label"><span>Wellenlänge</span><span class="metric-symbol">λ</span></div><p><output id="wavelength-value">237,7</output><span>km</span></p><div class="metric-change"><svg class="direction" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 3 10 10M5 13h8V5"/></svg><span id="wavelength-change">0 % kürzer</span></div></article>
+            <article class="metric metric-height"><div class="metric-label"><span>Wellenhöhe</span><span class="metric-symbol">H</span></div><p><output id="height-value">2,00</output><span>m</span></p><div class="metric-change"><svg class="direction" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13 13 3M5 3h8v8"/></svg><span id="height-change">1,00 × Ausgangshöhe</span></div></article>
+          </div>
+        </div>
+
+        <aside class="control-card" aria-labelledby="controls-title">
+          <div class="control-title"><span class="control-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 16h6M16 10h6"/></svg></span><span class="eyebrow">DEIN EXPERIMENT</span></div>
+          <h2 id="controls-title">Gib der Welle<br>den Impuls.</h2>
+          <p class="control-description">Variiere die Ausgangswelle und beobachte, was an der Küste ankommt.</p>
+
+          <div class="parameter">
+            <div class="parameter-heading"><label for="wave-height">Wellenhöhe in der Tiefsee</label><output id="initial-height" for="wave-height">2,0 <span>m</span></output></div>
+            <input id="wave-height" type="range" min="0.5" max="4" value="2" step="0.5">
+            <div class="range-labels"><span>0,5 m</span><span>4 m</span></div>
+          </div>
+          <div class="parameter period-parameter">
+            <div class="parameter-heading"><label for="period">Wellenperiode <span class="help-marker" title="Die Zeit zwischen zwei aufeinanderfolgenden Wellenbergen.">?</span></label><output id="period-value" for="period">20 <span>min</span></output></div>
+            <input id="period" type="range" min="10" max="30" value="20" step="1">
+            <div class="range-labels"><span>10 min</span><span>30 min</span></div>
+          </div>
+
+          <fieldset class="tempo"><legend>Animationstempo</legend><div class="segmented"><button type="button" data-speed="0.5" aria-pressed="false">Langsam</button><button type="button" data-speed="1" aria-pressed="true">Normal</button><button type="button" data-speed="2" aria-pressed="false">Schnell</button></div></fieldset>
+          <div class="transport" aria-label="Animationssteuerung">
+            <button id="start" class="button-primary" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z"/></svg><span>Start</span></button>
+            <button id="pause" class="button-secondary" type="button" disabled><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10"/></svg>Pause</button>
+            <button id="restart" class="button-icon" type="button" aria-label="Neustart" title="Neustart: zurück zum Anfang und pausieren"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7a6 6 0 1 1-.2 5M4 3v4h4"/></svg></button>
+          </div>
+          <p class="time-note"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg><span id="time-compression">63 Minuten Modellzeit in 40 Sekunden.</span></p>
+
+          <div class="depth-card"><div><span class="depth-label">AKTUELLE WASSERTIEFE</span><p><output id="depth-value">4.000</output><span>m</span></p></div><svg viewBox="0 0 42 48" aria-hidden="true"><path d="M5 7h32M8 13q6-4 12 0t12 0M21 19v23m-5-5 5 5 5-5"/></svg><div class="depth-track"><span id="depth-progress"></span></div></div>
+          <p class="tip"><span aria-hidden="true">↔</span> Tipp: Mit der Zeitleiste kannst du die Welle an jeder Stelle untersuchen.</p>
+          <p id="model-warning" class="model-warning" hidden>Bei dieser Höhe und Tiefe wird die lineare Näherung ungenau. Wellenbrechen ist nicht modelliert.</p>
+        </aside>
+      </section>
+
+      <section id="modell" class="model-section" aria-labelledby="model-title">
+        <div class="model-intro"><p class="eyebrow"><span></span> DIE PHYSIK DAHINTER</p><h2 id="model-title">Weniger Tiefe.<br>Mehr Wellenhöhe.</h2><p>Die Periode bleibt gleich. Die Energie der Welle wird näherungsweise erhalten.</p></div>
+        <article class="model-step"><span class="step-number">01 / GESCHWINDIGKEIT</span><h3>Die Welle wird langsamer.</h3><p>In flacherem Wasser sinkt die Ausbreitungsgeschwindigkeit.</p><span class="formula">c = √(g · h)</span></article>
+        <article class="model-step"><span class="step-number">02 / WELLENLÄNGE</span><h3>Die Welle wird kürzer.</h3><p>Bei gleicher Periode rücken die Wellenberge enger zusammen.</p><span class="formula">λ = c · T</span></article>
+        <article class="model-step"><span class="step-number">03 / WELLENHÖHE</span><h3>Die Welle wird höher.</h3><p>Nach dem Green’schen Gesetz wächst die Höhe bei abnehmender Tiefe.</p><span class="formula">H = H₀ · (h₀ / h)<sup>¼</sup></span></article>
+      </section>
+      <div class="model-notes"><p><strong>Ein vereinfachtes Modell.</strong> h = Wassertiefe, g = 9,81 m/s², T = Periode, H = Wellenhöhe (zweifache Amplitude). Reibung, Reflexion, Wellenbrechen und Überflutung sind nicht enthalten. Bei hohen Wellen im flachen Wasser ist die lineare Näherung eingeschränkt. Die Simulation endet bei 20 m Wassertiefe.</p><p>Der Shoaling-Effekt spielte auch beim Tsunami im Indischen Ozean 2004 eine Rolle. Diese Darstellung zeigt das Grundprinzip auf einem schematischen Küstenprofil.</p></div>
+    </main>
+    <footer class="site-footer"><span>Shoaling Lab<span class="brand-dot">.</span></span><span>Physik sichtbar machen.</span><span>300 km Modellstrecke · keine historischen Messdaten</span></footer>
+    <noscript><div class="noscript-message">Bitte aktiviere JavaScript, um die interaktive Animation zu nutzen.</div></noscript>
+  </body>
+</html>

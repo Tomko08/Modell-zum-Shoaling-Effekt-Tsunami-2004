@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#092a36">
+    <meta name="description" content="Vergleiche zwei unabhängig steuerbare Tsunamiwellen vor Banda Aceh und Sri Lanka. Ein historisch orientiertes Modell zu Shoaling, Küstenprofil und seitlicher Bündelung.">
+    <title>Shoaling Lab · Banda Aceh & Sri Lanka</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23092a36'/%3E%3Cpath d='M4 19Q10 5 16 19T28 19' fill='none' stroke='%23bef264' stroke-width='3'/%3E%3C/svg%3E">
+    <style>
+:root { color-scheme: light; --ink: #18332f; --muted: #77817e; --paper: #f5f6f2; --line: #e2e6df; --lime: #d5ef89; --teal: #538b77; --navy: #092a36; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 20px; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+button, input { font: inherit; }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+button:disabled { cursor: default; }
+a { color: inherit; text-decoration: none; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #3e947f; outline-offset: 5px; }
+button, a { touch-action: manipulation; }
+.skip-link { position: fixed; top: -80px; left: 20px; z-index: 5; background: white; padding: 16px; border-radius: 8px; }
+.skip-link:focus { top: 12px; }
+.site-header { max-width: 1360px; padding: 0 48px; height: 86px; margin: auto; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 12px; font-size: 23px; letter-spacing: -.9px; font-weight: 740; }
+.brand-light { font-weight: 400; }
+.brand-dot { color: #71a78d; }
+.brand-mark { width: 36px; height: 36px; background: var(--ink); border-radius: 11px; display: grid; place-items: center; }
+.brand-mark svg { width: 26px; fill: none; stroke: var(--lime); stroke-width: 1.8; stroke-linecap: round; }
+nav { display: flex; align-items: center; height: 100%; gap: 32px; font-size: 13px; font-weight: 550; color: #6f7c76; }
+nav a { height: 100%; display: flex; align-items: center; position: relative; gap: 8px; }
+nav svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.1; }
+nav a:hover { color: var(--ink); }
+nav .nav-active { color: var(--ink); }
+nav .nav-active::after { position: absolute; content: ""; width: 18px; height: 3px; background: var(--ink); bottom: -1px; left: calc(50% - 9px); border-radius: 4px; }
+.header-caption { font-size: 10px; font-weight: 650; letter-spacing: 1.4px; display: flex; align-items: center; gap: 8px; color: #7b867f; }
+.header-caption span, .eyebrow > span { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: #719580; }
+main { max-width: 1360px; padding: 45px 48px 0; margin: auto; }
+.intro { display: flex; align-items: center; justify-content: space-between; gap: 28px; margin-bottom: 34px; }
+.eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 1.6px; display: flex; align-items: center; gap: 9px; margin: 0 0 14px; color: #6d7e72; }
+h1 { font-size: clamp(34px, 3.15vw, 47px); line-height: 1.1; font-weight: 600; letter-spacing: -1.9px; margin: 0 0 17px; }
+.intro-description { color: #78817a; font-size: 13px; line-height: 1.7; margin: 0; }
+.comparison-entry { font-size: 11px; color: #678558; margin: 15px 0 0; }
+.comparison-entry a { display: inline-flex; gap: 8px; align-items: center; }
+.comparison-entry svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.1; }
+.intro-aside { display: flex; align-items: center; gap: 18px; color: #7a847b; font-size: 12px; line-height: 1.8; padding-right: 18px; }
+.intro-aside strong { font-weight: 500; color: #4b6054; }
+.intro-aside svg { width: 75px; height: 45px; stroke: #7d9c88; fill: none; stroke-width: 1.5; }
+.intro-aside .icon-floor { stroke: #c3ccb8; }
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; align-items: stretch; }
+.visual-column { min-width: 0; display: flex; flex-direction: column; gap: 15px; }
+.ocean-card { background: var(--navy); color: #e7eff0; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; flex: 1; }
+.scene-header { display: flex; justify-content: space-between; align-items: center; padding: 23px 27px 0; gap: 15px; }
+.scene-eyebrow { font-size: 8px; letter-spacing: 1.8px; font-weight: 650; color: #759ca5; }
+.scene-header h2 { font-size: 17px; font-weight: 450; letter-spacing: -.35px; margin: 6px 0 0; }
+.status-chip { display: flex; align-items: center; gap: 7px; border: 1px solid #35505a; border-radius: 22px; padding: 7px 11px; font-size: 10px; color: #aabfc4; white-space: nowrap; }
+.status-chip > span:first-child { width: 5px; height: 5px; background: #92a8ac; border-radius: 50%; }
+.status-chip.running { color: #d5ef89; border-color: #5b754c; }
+.status-chip.running > span:first-child { background: #d5ef89; }
+.status-chip.complete { color: #d5ef89; }
+.canvas-wrap { position: relative; width: 100%; flex: 1; min-height: 339px; }
+canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene-legend { position: absolute; left: 27px; bottom: 10px; display: flex; gap: 17px; font-size: 8px; color: #91a7ad; pointer-events: none; }
+.scene-legend > span { display: flex; align-items: center; gap: 6px; }
+.scene-legend i { display: inline-block; width: 14px; height: 2px; }
+.wave-key { background: #87c4c7; }
+.scene-legend .crest-key { width: 5px; height: 5px; border-radius: 50%; background: var(--lime); }
+.scale-note { position: absolute; right: 25px; bottom: 10px; font-size: 8px; color: #748d95; pointer-events: none; }
+.timeline { margin: 10px 27px 0; padding: 17px 0 20px; border-top: 1px solid #23434e; }
+.timeline-heading, .timeline-labels { display: flex; align-items: center; justify-content: space-between; }
+.timeline-heading { font-size: 10px; color: #ccdadb; }
+.timeline-heading output { color: #97aeb3; font-variant-numeric: tabular-nums; font-size: 10px; }
+.timeline-labels { color: #75939c; font-size: 8px; padding-top: 2px; }
+.timeline-labels b { font-weight: 450; color: #acbfc4; margin-left: 5px; }
+input[type="range"] { --range-fill: 0%; width: 100%; height: 4px; border-radius: 5px; background: linear-gradient(to right, var(--ink) 0%, var(--ink) var(--range-fill), #e2e6dd var(--range-fill), #e2e6dd 100%); appearance: none; cursor: pointer; margin: 16px 0 13px; display: block; padding: 0; }
+input[type="range"]::-webkit-slider-thumb { appearance: none; width: 13px; height: 13px; border: 3px solid white; background: var(--ink); border-radius: 50%; box-shadow: 0 0 0 1px var(--ink); }
+input[type="range"]::-moz-range-thumb { width: 8px; height: 8px; border: 3px solid white; background: var(--ink); border-radius: 50%; box-shadow: 0 0 0 1px var(--ink); }
+input.progress-range { height: 3px; background: linear-gradient(to right, var(--lime) 0%, var(--lime) var(--range-fill), #36525b var(--range-fill), #36525b 100%); margin: 14px 0 12px; }
+input.progress-range::-webkit-slider-thumb { background: var(--lime); box-shadow: none; border: 0; width: 10px; height: 10px; }
+input.progress-range::-moz-range-thumb { background: var(--lime); box-shadow: none; border: 0; width: 10px; height: 10px; }
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.metric { padding: 16px 19px 14px; border: 1px solid var(--line); background: #fff; border-radius: 12px; }
+.metric-height { background: #e9efdc; border-color: #e1e8d2; }
+.metric-label { display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: #7e8a80; }
+.metric-symbol { color: #9ca995; font-family: Georgia, serif; font-size: 16px; font-style: italic; }
+.metric p { display: flex; align-items: baseline; gap: 7px; font-size: 31px; font-weight: 500; letter-spacing: -1.2px; margin: 8px 0 10px; font-variant-numeric: tabular-nums; }
+.metric p > span { font-size: 11px; color: #8b968d; letter-spacing: 0; font-weight: 400; }
+.metric-change { display: flex; gap: 5px; align-items: center; font-size: 9px; color: #6e8572; }
+.direction { width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 1.2; }
+.control-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; }
+.control-title { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.control-title .eyebrow { margin: 0; font-size: 8px; letter-spacing: 1.5px; }
+.control-icon { display: flex; align-items: center; justify-content: center; background: #eef2e8; border-radius: 6px; width: 25px; height: 25px; }
+.control-icon svg { width: 15px; stroke: #7e9577; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+.control-card h2 { font-size: 27px; letter-spacing: -1px; line-height: 1.1; margin: 0 0 12px; font-weight: 550; }
+.control-description { margin: 0 0 26px; color: #8a9089; font-size: 11px; line-height: 1.7; }
+.parameter { margin-bottom: 23px; }
+.parameter-heading { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.parameter-heading label { font-size: 10px; font-weight: 550; color: #4e6154; }
+.parameter-heading output { display: flex; align-items: baseline; gap: 4px; font-size: 17px; font-weight: 550; letter-spacing: -.4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.parameter-heading output span { color: #8b9389; font-weight: 400; font-size: 10px; }
+.range-labels { display: flex; align-items: center; justify-content: space-between; font-size: 9px; color: #969d94; }
+.help-marker { display: inline-flex; align-items: center; justify-content: center; color: #93a08e; font-size: 8px; border: 1px solid #cbd4c4; width: 12px; height: 12px; border-radius: 50%; margin-left: 3px; cursor: help; }
+.period-parameter { margin-bottom: 24px; }
+.tempo { padding: 0; border: 0; margin: 0 0 18px; min-width: 0; }
+.tempo legend { font-size: 10px; font-weight: 550; margin-bottom: 10px; color: #4e6154; }
+.segmented { display: grid; grid-template-columns: repeat(3, 1fr); background: #f3f5ef; border-radius: 7px; padding: 3px; gap: 2px; }
+.segmented button { border: 0; color: #899281; padding: 8px 4px; font-size: 9px; border-radius: 5px; background: transparent; }
+.segmented button:hover { color: var(--ink); }
+.segmented button[aria-pressed="true"] { background: white; color: var(--ink); box-shadow: 0 1px 4px #2034260d; font-weight: 650; }
+.transport { display: flex; gap: 7px; }
+.transport button { border-radius: 7px; height: 40px; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 11px; font-weight: 550; border: 1px solid transparent; transition: opacity .15s, background .15s; }
+.transport svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+.button-primary { flex: 1; background: var(--ink); color: var(--lime); padding: 0 10px; }
+.button-primary svg { fill: currentColor; stroke: none; }
+.button-primary:hover { background: #284d43; }
+.transport button:disabled { opacity: .4; }
+.button-secondary { background: white; color: #46624f; padding: 0 10px; border-color: #e0e6db !important; }
+.button-secondary:hover:enabled, .button-icon:hover { background: #f0f4e8; }
+.button-icon { width: 40px; flex-shrink: 0; background: #f1f4eb; color: #6a8065; }
+.time-note { display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 8px; color: #99a190; margin: 11px 0 24px; }
+.time-note svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 1.2; flex-shrink: 0; }
+.depth-card { display: flex; justify-content: space-between; flex-wrap: wrap; background: #f5f7f0; border: 1px solid #edf0e6; border-radius: 9px; padding: 14px; margin-top: auto; }
+.depth-label { font-size: 7px; letter-spacing: 1.3px; color: #889681; font-weight: 650; }
+.depth-card p { font-size: 24px; font-weight: 500; letter-spacing: -.8px; margin: 6px 0 12px; font-variant-numeric: tabular-nums; }
+.depth-card p > span { color: #94a08b; font-size: 11px; margin-left: 6px; }
+.depth-card svg { width: 35px; height: 40px; stroke: #a8b798; fill: none; stroke-width: 1.4; }
+.depth-track { height: 3px; background: #e2e7d8; border-radius: 3px; overflow: hidden; width: 100%; }
+.depth-track span { display: block; height: 100%; width: 100%; background: #8ca479; border-radius: 3px; }
+.tip { display: flex; gap: 7px; color: #929a89; font-size: 8px; line-height: 1.7; margin: 13px 0 0; }
+.tip > span { font-size: 13px; line-height: 1.1; }
+.model-warning { font-size: 9px; line-height: 1.6; color: #8c6b32; background: #faf4e4; border-radius: 7px; padding: 9px 10px; margin: 10px 0 0; }
+.model-section { margin: 37px 0 0; padding: 30px 0 25px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1.18fr repeat(3, 1fr); gap: 33px; }
+.model-intro .eyebrow { font-size: 8px; letter-spacing: 1.1px; margin-bottom: 12px; }
+.model-intro h2 { font-size: 23px; font-weight: 550; line-height: 1.2; letter-spacing: -.6px; margin: 0 0 10px; }
+.model-intro > p:last-child { font-size: 10px; color: #91978a; line-height: 1.7; margin: 0; max-width: 205px; }
+.model-step { padding-top: 3px; }
+.step-number { font-size: 8px; font-weight: 650; letter-spacing: 1px; color: #93a184; }
+.model-step h3 { font-size: 13px; font-weight: 550; letter-spacing: -.15px; margin: 18px 0 10px; }
+.model-step p { font-size: 10px; line-height: 1.7; color: #8b9286; margin: 0 0 13px; max-width: 210px; }
+.formula { display: inline-block; font-family: Georgia, serif; font-size: 17px; font-style: italic; color: #647e58; }
+.formula sup { font-size: 13px; padding-left: 2px; }
+.model-notes { border-top: 1px solid var(--line); padding: 20px 0 24px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 38px; }
+.model-notes p { color: #969c92; font-size: 9px; line-height: 1.75; margin: 0; }
+.model-notes strong { color: #75836c; font-weight: 550; }
+.site-footer { max-width: 1264px; margin: 0 auto; padding: 19px 0 24px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 20px; color: #9ba396; font-size: 9px; }
+.site-footer > span:first-child { color: #6b8064; font-weight: 550; font-size: 12px; letter-spacing: -.3px; }
+.noscript-message { position: fixed; bottom: 20px; left: 20px; right: 20px; background: var(--ink); color: white; padding: 20px; border-radius: 10px; z-index: 4; }
+@media (min-width: 1450px) { .canvas-wrap { min-height: 360px; } }
+@media (max-width: 1120px) { .site-header { padding: 0 32px; } main { padding: 35px 32px 0; } .workspace { grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; } .control-card { padding: 20px; } .control-card h2 { font-size: 25px; } .scene-header { padding: 22px 22px 0; } .timeline { margin-left: 22px; margin-right: 22px; } .scene-legend { left: 22px; gap: 10px; } .scale-note { right: 22px; font-size: 7px; } .metric { padding: 14px; } .metric p { font-size: 27px; } .metric-change { font-size: 8px; } .site-footer { margin-left: 32px; margin-right: 32px; } .model-section { gap: 22px; } }
+@media (max-width: 900px) { .header-caption { display: none; } .intro-aside { display: none; } .workspace { grid-template-columns: minmax(0, 1fr); } .control-card { display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; padding: 25px; } .control-title, .control-card h2, .control-description { grid-column: 1; } .control-title { grid-row: 1; } .control-card h2 { grid-row: 2; } .control-card h2 br { display: none; } .control-description { grid-row: 3; margin-bottom: 10px; } .parameter { grid-column: 2; grid-row: 1 / 3; align-self: start; margin-bottom: 0; } .period-parameter { grid-row: 3 / 5; padding-top: 5px; } .tempo { grid-column: 1; grid-row: 4; margin-top: 10px; } .transport { grid-column: 1; grid-row: 5; } .time-note { grid-column: 1; grid-row: 6; margin-bottom: 0; } .depth-card { grid-column: 2; grid-row: 5 / 7; } .tip { grid-column: 1 / -1; margin-top: 18px; } .canvas-wrap { min-height: 360px; } .model-section { grid-template-columns: repeat(3, 1fr); } .model-intro { grid-column: 1 / -1; display: flex; align-items: center; gap: 24px; } .model-intro .eyebrow { margin: 0; } .model-intro h2 { margin: 0; font-size: 20px; } .model-intro > p:last-child { max-width: 225px; margin-left: auto; } .model-step h3 { margin-top: 12px; } }
+@media (max-width: 560px) { .site-header { height: 72px; padding: 0 20px; } .brand { font-size: 20px; gap: 9px; } .brand-mark { width: 30px; height: 30px; border-radius: 9px; } .brand-mark svg { width: 23px; } nav { gap: 18px; font-size: 10px; } nav a span { display: none; } main { padding: 28px 16px 0; } .intro { margin-bottom: 25px; padding: 0 4px; } h1 { font-size: clamp(28px, 7.3vw, 39px); letter-spacing: -1.2px; } .eyebrow { font-size: 8px; margin-bottom: 12px; } .intro-description { font-size: 12px; line-height: 1.65; max-width: 330px; } .desktop-break { display: none; } .scene-header { padding: 20px 17px 0; } .scene-header h2 { font-size: 14px; } .scene-eyebrow { font-size: 7px; } .status-chip { font-size: 8px; padding: 6px 8px; } .canvas-wrap { min-height: 300px; } .scene-legend { left: 17px; font-size: 7px; bottom: 18px; gap: 12px; } .scale-note { left: 17px; bottom: 4px; font-size: 7px; } .timeline { margin: 12px 17px 0; padding-bottom: 16px; } .timeline-labels { font-size: 7px; } .timeline-labels b { margin-left: 3px; } .metrics { gap: 7px; } .metric { padding: 12px 10px; border-radius: 10px; } .metric-label { font-size: 8px; } .metric-symbol { font-size: 13px; } .metric p { font-size: 24px; margin: 9px 0; gap: 4px; letter-spacing: -.8px; } .metric p > span { font-size: 9px; } .metric-change { font-size: 7px; gap: 2px; } .metric-change .direction { font-size: 10px; } .control-card { display: flex; padding: 23px; } .control-title { margin-bottom: 13px; } .control-card h2 { font-size: 26px; } .control-description { font-size: 12px; margin-bottom: 24px; } .parameter { margin-bottom: 24px; align-self: stretch; } .parameter-heading label { font-size: 12px; } .parameter-heading output { font-size: 20px; } .parameter input { margin: 19px 0 16px; height: 5px; } .parameter input::-webkit-slider-thumb { width: 17px; height: 17px; } .parameter input::-moz-range-thumb { width: 11px; height: 11px; } .range-labels { font-size: 10px; } .period-parameter { padding-top: 0; } .tempo { margin-top: 0; } .tempo legend { font-size: 12px; } .segmented button { padding: 12px 4px; font-size: 11px; } .transport button { height: 44px; font-size: 12px; } .time-note { margin: 13px 0 22px; font-size: 9px; } .tip { font-size: 10px; } .depth-label { font-size: 8px; } .model-section { grid-template-columns: 1fr; gap: 24px; margin-top: 28px; padding-top: 25px; } .model-intro { display: block; } .model-intro .eyebrow { margin-bottom: 12px; } .model-intro h2 { font-size: 25px; margin-bottom: 10px; } .model-intro > p:last-child { margin: 0; max-width: 300px; font-size: 12px; } .model-step { padding: 18px 0 0; border-top: 1px solid var(--line); } .step-number { font-size: 9px; } .model-step h3 { font-size: 15px; } .model-step p { font-size: 12px; max-width: 100%; } .formula { font-size: 20px; } .model-notes { grid-template-columns: 1fr; gap: 13px; } .model-notes p { font-size: 10px; } .site-footer { margin: 0 20px; flex-wrap: wrap; gap: 13px; } .site-footer > span:last-child { flex-basis: 100%; font-size: 8px; } }
+@media (max-width: 360px) { .metric p { font-size: 21px; } .metric-change { font-size: 6.5px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } button { transition: none !important; } }
+
+</style>
+    <style>
+.comparison-page { --lanka: #8acbd2; }
+.comparison-page main { padding-top: 37px; }
+.comparison-page .intro { margin-bottom: 25px; }
+.comparison-page .intro-aside svg { width: 84px; height: 55px; }
+.comparison-page .intro-aside .lanka-line { stroke: #66a8b4; }
+.scenario-notice { display: flex; align-items: center; gap: 12px; padding: 13px 17px; background: #edf1e5; border: 1px solid #e1e7d6; border-radius: 10px; margin-bottom: 16px; }
+.scenario-notice p { margin: 0; font-size: 10px; color: #7e8c74; line-height: 1.65; }
+.scenario-notice strong { color: #4e654b; font-weight: 600; }
+.notice-icon { flex-shrink: 0; font-family: Georgia, serif; font-style: italic; font-size: 12px; color: #6b845b; border: 1px solid #aebd9a; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; }
+.assumption-tag { font-size: 7px; letter-spacing: .9px; white-space: nowrap; border-left: 1px solid #d7dfca; padding-left: 14px; color: #879578; }
+.experiment-bar { background: white; padding: 18px 22px; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 23px; }
+.experiment-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.toolbar-label { font-size: 8px; letter-spacing: 1.2px; color: #8b9881; font-weight: 600; }
+.scenario-switch { display: flex; align-items: center; gap: 5px; background: #f2f4ee; padding: 4px; border-radius: 8px; margin-top: 8px; }
+.scenario-switch button { border: 0; background: transparent; border-radius: 6px; padding: 10px 15px; color: #899280; font-size: 11px; }
+.scenario-switch button[aria-pressed="true"] { background: var(--ink); color: var(--lime); font-weight: 550; }
+.coast-button { display: flex; align-items: center; justify-content: center; gap: 9px; background: var(--lime); color: var(--ink); border: 1px solid #cbdc9d; border-radius: 7px; padding: 12px 16px; font-size: 11px; font-weight: 550; }
+.coast-button:hover { background: #c8e575; }
+.coast-button svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.mode-description { font-size: 10px; color: #8c9586; line-height: 1.6; margin: 10px 0 14px; }
+.experiment-bottom { border-top: 1px solid #edf0e8; padding-top: 13px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.geometry-toggle { display: flex; align-items: center; gap: 10px; position: relative; cursor: pointer; font-size: 11px; color: #61755a; }
+.geometry-toggle input { position: absolute; width: 20px; height: 20px; opacity: 0; left: 0; margin: 0; cursor: pointer; }
+.checkbox-visual { width: 17px; height: 17px; border-radius: 4px; border: 1px solid #c8d2bc; background: #f8f9f5; flex-shrink: 0; pointer-events: none; }
+.geometry-toggle input:checked + .checkbox-visual { background: var(--ink); border-color: var(--ink); }
+.geometry-toggle input:checked + .checkbox-visual::after { content: ""; display: block; width: 8px; height: 4px; border-left: 1.5px solid var(--lime); border-bottom: 1.5px solid var(--lime); transform: rotate(-45deg); margin: 4px 3px; }
+.geometry-toggle input:focus-visible + .checkbox-visual { outline: 3px solid #3e947f; outline-offset: 4px; }
+.geometry-toggle small { display: block; color: #a1a991; font-size: 8px; margin-top: 3px; }
+.comparison-tempo { display: flex; align-items: center; gap: 5px; }
+.comparison-tempo > span { color: #9ba38f; font-size: 9px; margin-right: 5px; }
+.comparison-tempo button { border: 1px solid #e2e8d9; background: white; color: #88997d; font-size: 9px; border-radius: 5px; padding: 7px 9px; min-width: 39px; }
+.comparison-tempo button[aria-pressed="true"] { color: #47613a; background: #edf3e2; border-color: #d9e5c7; font-weight: 650; }
+.comparison-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
+.region-panel { padding: 21px; background: white; border: 1px solid var(--line); border-radius: 15px; min-width: 0; }
+.region-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 19px; }
+.region-name { display: flex; gap: 11px; align-items: center; }
+.region-number { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 9px; background: #eff5df; color: #7d9860; font-size: 11px; }
+.region-name h2 { font-size: 21px; font-weight: 550; letter-spacing: -.7px; margin: 0 0 5px; }
+.region-name p { color: #9aa18f; font-size: 8px; margin: 0; }
+.region-badge { font-size: 7px; letter-spacing: 1px; color: #889b76; border: 1px solid #e5ecdb; border-radius: 20px; padding: 6px 8px; white-space: nowrap; }
+.lanka-panel .region-number { background: #e6f3f4; color: #6f9da5; }
+.lanka-panel .region-badge { color: #8babb1; border-color: #e1eeee; }
+.comparison-page .scene-header { padding: 15px 19px 0; }
+.comparison-page .scene-eyebrow { font-size: 6px; letter-spacing: 1.2px; }
+.comparison-page .status-chip { font-size: 8px; padding: 6px 8px; }
+.comparison-page .canvas-wrap { flex: none; min-height: 290px; height: 290px; }
+.comparison-page .scene-legend { left: 19px; bottom: 20px; font-size: 6px; gap: 12px; }
+.comparison-page .scale-note { bottom: 7px; left: 19px; right: auto; font-size: 6px; }
+.comparison-page .timeline { margin: 7px 19px 0; padding: 13px 0 17px; }
+.comparison-page .timeline-heading { font-size: 8px; }
+.comparison-page .timeline-heading output { font-size: 8px; }
+.comparison-page .timeline-labels { font-size: 7px; }
+.comparison-page .metrics { gap: 9px; margin-top: 12px; }
+.comparison-page .metric { padding: 12px 14px; border-radius: 9px; }
+.comparison-page .metric-label { font-size: 8px; }
+.comparison-page .metric p { font-size: 25px; margin: 8px 0 0; gap: 5px; }
+.comparison-page .metric p > span { font-size: 9px; }
+.lanka-panel .metric-height { background: #e9f3f4; border-color: #daecee; }
+.lanka-panel .metric-height .metric-symbol { color: #8bb0b7; }
+.lanka-panel .button-primary { color: #a8dce1; }
+.lanka-panel input.progress-range { background: linear-gradient(to right, var(--lanka) 0%, var(--lanka) var(--range-fill), #36525b var(--range-fill), #36525b 100%); }
+.lanka-panel input.progress-range::-webkit-slider-thumb { background: var(--lanka); }
+.lanka-panel input.progress-range::-moz-range-thumb { background: var(--lanka); }
+.lanka-panel .crest-key { background: var(--lanka); }
+.region-controls { padding-top: 15px; }
+.comparison-page .transport { align-items: center; gap: 6px; }
+.comparison-page .button-primary { flex: none; min-width: 83px; }
+.comparison-page .transport button { height: 35px; font-size: 10px; }
+.comparison-page .button-icon { width: 35px; }
+.current-depth { margin-left: auto; font-size: 9px; color: #94a087; display: flex; align-items: baseline; gap: 4px; white-space: nowrap; }
+.current-depth output { color: #52684a; font-weight: 550; font-variant-numeric: tabular-nums; }
+.panel-parameters { display: grid; grid-template-columns: 1fr 1fr; gap: 27px; padding-top: 20px; }
+.panel-parameters .parameter { margin-bottom: 0; grid-column: auto; grid-row: auto; align-self: stretch; }
+.panel-parameters .parameter-heading label { font-size: 9px; }
+.panel-parameters .parameter-heading output { font-size: 16px; }
+.panel-parameters .parameter-heading output span { font-size: 9px; }
+.panel-parameters input { margin: 14px 0 10px; height: 3px; }
+.panel-parameters .range-labels { font-size: 7px; }
+.gain-strip { display: flex; align-items: center; gap: 16px; margin-top: 16px; padding: 11px 0 0; border-top: 1px solid #edf0e7; font-size: 8px; color: #a2ac96; }
+.gain-strip strong { font-size: 9px; color: #637956; font-weight: 600; margin-left: 4px; }
+.gain-strip > span:last-child { margin-left: auto; font-size: 7px; color: #a7af9d; }
+.comparison-page .model-warning { font-size: 8px; margin-top: 10px; }
+.time-context { display: flex; gap: 7px; align-items: center; color: #939c88; font-size: 9px; line-height: 1.6; margin: 14px 0 25px; }
+.time-context svg { width: 12px; height: 12px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.1; }
+.coast-result { display: grid; grid-template-columns: 1fr 1.35fr .65fr; gap: 35px; align-items: center; background: #eef2e6; border: 1px solid #e3e9d8; border-radius: 13px; padding: 26px 28px; margin-top: 25px; }
+.result-intro .eyebrow { font-size: 7px; letter-spacing: 1.2px; margin-bottom: 10px; }
+.result-intro h2 { font-size: 24px; line-height: 1.15; font-weight: 550; letter-spacing: -.7px; margin: 0 0 9px; }
+.result-intro > p:not(.eyebrow) { font-size: 9px; line-height: 1.7; color: #8a9780; margin: 0 0 9px; }
+.result-caveat { font-size: 7px; color: #9daa8e; }
+.result-row + .result-row { margin-top: 25px; }
+.result-row > div:first-child { display: flex; align-items: center; gap: 7px; color: #6c7f5e; font-size: 10px; margin-bottom: 9px; }
+.result-row output { margin-left: auto; font-size: 17px; font-weight: 550; color: var(--ink); letter-spacing: -.4px; font-variant-numeric: tabular-nums; }
+.result-dot { width: 6px; height: 6px; border-radius: 50%; }
+.banda-dot { background: #a7c86a; }
+.lanka-dot { background: #85b7c0; }
+.bar-track { height: 8px; border-radius: 6px; background: #dde5d1; overflow: hidden; }
+.bar-track span { height: 100%; display: block; border-radius: 6px; }
+#banda-bar { background: #aac971; }
+#lanka-bar { background: #8ebfc7; }
+.height-ratio { border-left: 1px solid #dae3cd; padding-left: 30px; display: flex; flex-direction: column; gap: 9px; }
+.height-ratio output { font-size: 39px; letter-spacing: -1.4px; font-weight: 500; color: #506844; }
+.height-ratio span { font-size: 9px; color: #8f9e80; line-height: 1.7; }
+.comparison-model { padding-top: 35px; }
+.model-heading .eyebrow { font-size: 8px; }
+.model-heading h2 { font-size: 27px; font-weight: 550; letter-spacing: -.8px; margin: 0 0 10px; }
+.model-heading > p:last-child { font-size: 11px; color: #959c8c; margin: 0 0 23px; }
+.explanation-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.explanation-card { background: white; border: 1px solid var(--line); border-radius: 11px; padding: 22px; }
+.explanation-card .step-number { font-size: 8px; }
+.explanation-card h3 { font-size: 16px; font-weight: 550; letter-spacing: -.4px; margin: 18px 0 12px; }
+.explanation-card p { font-size: 10px; line-height: 1.8; color: #8f9987; margin: 0 0 16px; }
+.assumption-box { border-top: 1px solid #edf0e7; padding-top: 13px; font-size: 9px; color: #8a9880; }
+.assumption-box strong { color: #688256; font-size: 11px; font-weight: 550; }
+.assumption-box span { display: block; font-size: 8px; color: #a3ad98; margin-top: 5px; line-height: 1.6; }
+.ray-illustration { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; border-top: 1px solid #edf0e7; padding-top: 11px; }
+.ray-illustration > div { display: flex; flex-direction: column; gap: 4px; }
+.ray-illustration span { font-size: 7px; color: #98a78a; }
+.ray-illustration svg { width: 100%; height: 31px; stroke: #a7c572; fill: none; stroke-width: 1.2; }
+.ray-illustration > div:last-child svg { stroke: #89b5bd; }
+.ray-illustration strong { font-weight: 500; color: #7c9270; font-size: 9px; }
+.geometry-disabled .ray-illustration { opacity: .45; }
+.comparison-equation { display: grid; grid-template-columns: 1.1fr 1fr; gap: 30px; padding: 28px 0; align-items: center; }
+.comparison-equation .formula { font-size: 22px; }
+.comparison-equation > div:last-child .formula { margin-right: 28px; font-size: 20px; }
+.comparison-equation p { font-size: 9px; color: #9aa48f; margin: 10px 0 0; line-height: 1.7; }
+.comparison-page .model-notes { grid-template-columns: 1fr 1fr; }
+.source-details { border-top: 1px solid var(--line); padding: 17px 0 25px; color: #89997b; font-size: 10px; }
+.source-details summary { cursor: pointer; font-weight: 500; }
+.source-details > div { padding: 10px 0 0 15px; }
+.source-details p { font-size: 9px; line-height: 1.8; color: #929e85; }
+.source-details a { text-decoration: underline; text-underline-offset: 3px; color: #658854; }
+@media (max-width: 1120px) { .comparison-grid { gap: 15px; } .region-panel { padding: 16px; } .region-heading { gap: 6px; } .region-name { gap: 8px; } .region-name h2 { font-size: 19px; } .region-name p { font-size: 7px; } .region-badge { font-size: 6px; padding: 5px 6px; } .comparison-page .metric { padding: 11px 10px; } .comparison-page .metric p { font-size: 22px; gap: 4px; } .comparison-page .metric-label { font-size: 7px; } .comparison-page .metric p > span { font-size: 8px; } .comparison-page .scene-header { padding-left: 15px; padding-right: 15px; } .comparison-page .scene-eyebrow { font-size: 5px; letter-spacing: .8px; } .comparison-page .scene-legend, .comparison-page .scale-note { left: 15px; } .comparison-page .timeline { margin-left: 15px; margin-right: 15px; } .gain-strip { gap: 10px; } .gain-strip > span:last-child { display: none; } .current-depth { font-size: 8px; } .coast-result { gap: 23px; padding: 23px; } .height-ratio { padding-left: 20px; } .explanation-card { padding: 18px; } }
+@media (max-width: 850px) { .comparison-grid { grid-template-columns: 1fr; gap: 20px; } .region-panel { padding: 22px; } .region-name h2 { font-size: 23px; } .region-name p { font-size: 9px; } .region-badge { font-size: 8px; } .comparison-page .canvas-wrap { height: 305px; min-height: 305px; } .comparison-page .scene-eyebrow { font-size: 7px; } .comparison-page .scene-legend, .comparison-page .scale-note { font-size: 7px; } .comparison-page .metric { padding: 14px 17px; } .comparison-page .metric p { font-size: 28px; } .comparison-page .metric-label { font-size: 10px; } .comparison-page .metric p > span { font-size: 10px; } .comparison-page .transport button { height: 39px; font-size: 12px; } .comparison-page .button-primary { min-width: 100px; } .comparison-page .button-icon { width: 39px; } .current-depth { font-size: 11px; } .panel-parameters .parameter-heading label { font-size: 11px; } .panel-parameters .parameter-heading output { font-size: 20px; } .panel-parameters .range-labels { font-size: 9px; } .gain-strip { font-size: 10px; gap: 20px; } .gain-strip > span:last-child { display: block; font-size: 8px; } .gain-strip strong { font-size: 11px; } .comparison-page .model-warning { font-size: 10px; } .coast-result { grid-template-columns: 1fr 1.2fr; gap: 24px; } .height-ratio { grid-column: 1 / -1; border-left: 0; border-top: 1px solid #dae3cd; flex-direction: row; align-items: center; padding: 17px 0 0; gap: 20px; } .height-ratio span { font-size: 11px; } .explanation-grid { grid-template-columns: 1fr; } .explanation-card p { font-size: 12px; } .explanation-card h3 { font-size: 19px; } .assumption-box { font-size: 11px; } .assumption-box span { font-size: 10px; } .ray-illustration span { font-size: 9px; } .ray-illustration svg { height: 40px; } .ray-illustration strong { font-size: 11px; } .comparison-equation { grid-template-columns: 1fr; gap: 25px; } .assumption-tag { display: none; } }
+@media (max-width: 560px) { .comparison-page main { padding-top: 28px; } .comparison-page .intro-description { max-width: 330px; } .scenario-notice { padding: 12px; gap: 10px; align-items: flex-start; } .notice-icon { margin-top: 2px; } .scenario-notice p { font-size: 10px; } .experiment-bar { padding: 16px; margin-bottom: 18px; } .experiment-top { flex-direction: column; align-items: stretch; gap: 15px; } .scenario-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 8px; } .scenario-switch button { padding: 10px 8px; font-size: 10px; line-height: 1.5; } .coast-button { font-size: 11px; padding: 11px; } .mode-description { font-size: 10px; margin-top: 13px; } .experiment-bottom { flex-direction: column; align-items: stretch; gap: 15px; } .geometry-toggle { font-size: 11px; } .comparison-tempo { justify-content: flex-end; } .comparison-tempo > span { margin-right: auto; } .comparison-tempo button { padding: 9px 15px; font-size: 10px; } .region-panel { padding: 13px; border-radius: 13px; } .region-heading { margin-bottom: 15px; } .region-name { gap: 8px; } .region-number { width: 28px; height: 28px; font-size: 9px; } .region-name h2 { font-size: 20px; } .region-name p { font-size: 7px; max-width: 195px; line-height: 1.5; } .region-badge { font-size: 6px; } .comparison-page .scene-eyebrow { font-size: 5px; letter-spacing: .5px; } .comparison-page .canvas-wrap { height: 290px; min-height: 290px; } .comparison-page .scene-legend { font-size: 6px; } .comparison-page .scale-note { font-size: 5px; } .comparison-page .timeline-heading { font-size: 8px; } .comparison-page .timeline-heading output { font-size: 7px; } .comparison-page .metric { padding: 11px 9px; } .comparison-page .metric-label { font-size: 7px; } .comparison-page .metric p { font-size: clamp(19px, 5.5vw, 26px); gap: 4px; letter-spacing: -.7px; } .comparison-page .metric p > span { font-size: 8px; } .comparison-page .metric-symbol { font-size: 12px; } .comparison-page .transport { flex-wrap: wrap; row-gap: 11px; } .comparison-page .transport button { height: 37px; font-size: 10px; } .comparison-page .button-primary { min-width: 85px; } .comparison-page .button-icon { width: 37px; } .current-depth { font-size: 9px; } .panel-parameters { gap: 18px; padding-top: 20px; } .panel-parameters .parameter { align-self: stretch; margin-bottom: 0; } .panel-parameters .parameter-heading label { font-size: 9px; } .panel-parameters .parameter-heading output { font-size: 16px; } .panel-parameters .parameter-heading output span { font-size: 8px; } .panel-parameters .range-labels { font-size: 8px; } .panel-parameters input::-webkit-slider-thumb { width: 14px; height: 14px; } .gain-strip { font-size: 9px; gap: 18px; } .gain-strip strong { font-size: 10px; } .gain-strip > span:last-child { display: none; } .time-context { font-size: 9px; align-items: flex-start; gap: 6px; } .time-context svg { margin-top: 2px; } .coast-result { grid-template-columns: 1fr; padding: 21px; gap: 22px; } .result-intro h2 br { display: none; } .result-intro h2 { font-size: 24px; } .result-intro > p:not(.eyebrow) { font-size: 11px; } .result-caveat { font-size: 8px; } .height-ratio { padding-top: 15px; } .height-ratio output { font-size: 38px; } .height-ratio span { font-size: 10px; } .result-row > div:first-child { font-size: 10px; } .comparison-model { padding-top: 30px; } .model-heading h2 { font-size: 25px; line-height: 1.25; } .model-heading > p:last-child { font-size: 12px; line-height: 1.7; } .comparison-equation .formula { font-size: 21px; } .comparison-page .model-notes { grid-template-columns: 1fr; gap: 18px; } .comparison-page .model-notes p { font-size: 10px; } .source-details { font-size: 11px; } .source-details p { font-size: 10px; } }
+
+</style>
+
+
+  </head>
+  <body class="comparison-page">
+    <a class="skip-link" href="#vergleich">Zum Küstenvergleich</a>
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="Shoaling Lab Startseite"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 12c4-5 8-5 12 0s8 5 12 0M4 20c4-5 8-5 12 0s8 5 12 0"/></svg></span><span>Shoaling<span class="brand-light"> Lab</span><span class="brand-dot">.</span></span></a>
+      <nav aria-label="Hauptnavigation"><a class="nav-active" href="#vergleich">Vergleich</a><a href="#modell">Das Modell <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M4 4h8v8"/></svg></a></nav>
+      <span class="header-caption"><span></span> WISSEN IN BEWEGUNG</span>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow"><span></span> INDISCHER OZEAN · 26. DEZEMBER 2004</p><h1 id="page-title">Zwei Küsten.<br>Ein Tsunami.</h1><p class="intro-description">Banda Aceh und Sri Lanka im Modellvergleich.<br class="desktop-break"> Verfolge jede Welle einzeln und entdecke, was ihre Höhe verändert.</p></div>
+        <div class="intro-aside"><svg viewBox="0 0 85 50" aria-hidden="true"><path d="M2 20Q15-6 28 20T54 20"/><path class="lanka-line" d="M27 39Q40 22 53 39T79 39"/></svg><span>Zwei Wellen.<br><strong>Unabhängig steuerbar.</strong></span></div>
+      </section>
+
+      <div class="scenario-notice"><span class="notice-icon" aria-hidden="true">i</span><p><strong>Historisch orientiertes Szenario.</strong> Küstenprofile, Eingangshöhen und Bündelung sind illustrative Annahmen. Die Animation erklärt mögliche Ursachen des Unterschieds; sie rekonstruiert keine Messdaten von 2004.</p><span class="assumption-tag">IDEALISIERTES MODELL</span></div>
+
+      <section class="experiment-bar" aria-label="Vergleichseinstellungen">
+        <div class="experiment-top"><div><span class="toolbar-label">WAS MÖCHTEST DU VERGLEICHEN?</span><div class="scenario-switch" role="group" aria-label="Vergleichsmodus"><button type="button" data-mode="regional" aria-pressed="true">Regionale Eingangswellen</button><button type="button" data-mode="equal" aria-pressed="false">Gleiche Eingangswelle</button></div></div><button id="compare-coast" class="coast-button" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 14h14M4 10l4-5 4 5 4-5M4 17v-3M16 17v-3"/></svg>An der Küste vergleichen</button></div>
+        <p id="mode-description" class="mode-description">Illustrative Ausgangshöhen: Banda Aceh 3,0 m, Sri Lanka 1,5 m. Jede Welle lässt sich separat anpassen.</p>
+        <div class="experiment-bottom"><label class="geometry-toggle"><input id="geometry" type="checkbox" checked><span class="checkbox-visual" aria-hidden="true"></span><span>Seitliche Bündelung einbeziehen <small>zusätzliche Geometrie-Annahme</small></span></label><div class="comparison-tempo" role="group" aria-label="Gemeinsamer Zeitraffer"><span>Zeitraffer</span><button type="button" data-tempo="45" aria-pressed="false">45×</button><button type="button" data-tempo="90" aria-pressed="true">90×</button><button type="button" data-tempo="180" aria-pressed="false">180×</button></div></div>
+      </section>
+
+      <p class="time-context"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg>Beide Uhren zeigen nur die lokale 120-km-Modellreise vor der jeweiligen Küste. Das sind keine Ankunftszeiten seit dem Erdbeben.</p>
+      <section id="vergleich" class="comparison-grid" aria-label="Zwei unabhängig steuerbare Wellen">
+        <article class="region-panel" data-region="bandaAceh" aria-labelledby="banda-title">
+          <header class="region-heading"><div class="region-name"><span class="region-number">01</span><div><h2 id="banda-title">Banda Aceh</h2><p>Nordwest-Sumatra · schematisches Profil</p></div></div><span class="region-badge">QUELLNAH</span></header>
+          <section class="ocean-card" aria-label="Welle vor Banda Aceh"><header class="scene-header"><span class="scene-eyebrow">IDEALISIERTER KÜSTENQUERSCHNITT</span><span class="status-chip" role="status" data-role="status"><span></span><span data-role="status-text">Bereit</span></span></header><div class="canvas-wrap"><canvas data-role="canvas" role="img" aria-label="Welle vor Banda Aceh"></canvas><div class="scene-legend"><span><i class="wave-key"></i>Wasseroberfläche</span><span><i class="crest-key"></i>Verfolgter Wellenberg</span></div><span class="scale-note">Gemeinsamer Wellenhöhenmaßstab · überzeichnet</span></div><div class="timeline"><div class="timeline-heading"><label for="banda-progress">Lokale Modellreise</label><output data-role="time" for="banda-progress">0:00 min</output></div><input id="banda-progress" data-role="progress" class="progress-range" type="range" min="0" max="1000" value="0" step="1" aria-label="Wellenposition Banda Aceh"><div class="timeline-labels"><span>2.000 m</span><span data-role="distance">0 von 120 km</span><span>20 m</span></div></div></section>
+          <div class="metrics" aria-label="Aktuelle Modellwerte Banda Aceh"><article class="metric"><div class="metric-label"><span>Geschwindigkeit</span><span class="metric-symbol">c</span></div><p><output data-role="speed">504</output><span>km/h</span></p></article><article class="metric"><div class="metric-label"><span>Wellenlänge</span><span class="metric-symbol">λ</span></div><p><output data-role="wavelength">168,1</output><span>km</span></p></article><article class="metric metric-height"><div class="metric-label"><span>Wellenhöhe</span><span class="metric-symbol">H</span></div><p><output data-role="height">3,00</output><span>m</span></p></article></div>
+          <div class="region-controls"><div class="transport" aria-label="Steuerung Banda Aceh"><button data-role="start" class="button-primary" type="button" aria-label="Banda Aceh starten"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z"/></svg><span>Start</span></button><button data-role="pause" class="button-secondary" type="button" aria-label="Banda Aceh pausieren" disabled><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10"/></svg>Pause</button><button data-role="restart" class="button-icon" type="button" aria-label="Banda Aceh neu starten" title="Diese Welle zurücksetzen und pausieren"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7a6 6 0 1 1-.2 5M4 3v4h4"/></svg></button><span class="current-depth">Tiefe <output data-role="depth">2.000</output> m</span></div><div class="panel-parameters"><div class="parameter"><div class="parameter-heading"><label for="banda-input-height">Eingangshöhe H₀</label><output for="banda-input-height" data-role="input-height-value">3,0 <span>m</span></output></div><input id="banda-input-height" data-role="input-height" type="range" min="0.5" max="4" step="0.5" value="3"><div class="range-labels"><span>0,5 m</span><span>4 m</span></div></div><div class="parameter"><div class="parameter-heading"><label for="banda-period">Periode T</label><output for="banda-period" data-role="period-value">20 <span>min</span></output></div><input id="banda-period" data-role="period" type="range" min="10" max="30" step="1" value="20"><div class="range-labels"><span>10 min</span><span>30 min</span></div></div></div><div class="gain-strip"><span>Tiefenwirkung <strong data-role="shoaling-gain">1,00×</strong></span><span>Bündelung <strong data-role="geometry-gain">1,00×</strong></span><span>H = H₀ × beide Faktoren</span></div><p data-role="warning" class="model-warning" hidden>Die lineare Näherung wird im sehr flachen Wasser ungenau; Wellenbrechen ist nicht enthalten.</p></div>
+        </article>
+
+        <article class="region-panel lanka-panel" data-region="sriLanka" aria-labelledby="lanka-title">
+          <header class="region-heading"><div class="region-name"><span class="region-number">02</span><div><h2 id="lanka-title">Sri Lanka</h2><p>Ostküste bei Kalmunai · schematisches Profil</p></div></div><span class="region-badge">FERNFELD</span></header>
+          <section class="ocean-card" aria-label="Welle vor Sri Lanka"><header class="scene-header"><span class="scene-eyebrow">IDEALISIERTER KÜSTENQUERSCHNITT</span><span class="status-chip" role="status" data-role="status"><span></span><span data-role="status-text">Bereit</span></span></header><div class="canvas-wrap"><canvas data-role="canvas" role="img" aria-label="Welle vor Sri Lanka"></canvas><div class="scene-legend"><span><i class="wave-key"></i>Wasseroberfläche</span><span><i class="crest-key"></i>Verfolgter Wellenberg</span></div><span class="scale-note">Gemeinsamer Wellenhöhenmaßstab · überzeichnet</span></div><div class="timeline"><div class="timeline-heading"><label for="lanka-progress">Lokale Modellreise</label><output data-role="time" for="lanka-progress">0:00 min</output></div><input id="lanka-progress" data-role="progress" class="progress-range" type="range" min="0" max="1000" value="0" step="1" aria-label="Wellenposition Sri Lanka"><div class="timeline-labels"><span>2.000 m</span><span data-role="distance">0 von 120 km</span><span>20 m</span></div></div></section>
+          <div class="metrics" aria-label="Aktuelle Modellwerte Sri Lanka"><article class="metric"><div class="metric-label"><span>Geschwindigkeit</span><span class="metric-symbol">c</span></div><p><output data-role="speed">504</output><span>km/h</span></p></article><article class="metric"><div class="metric-label"><span>Wellenlänge</span><span class="metric-symbol">λ</span></div><p><output data-role="wavelength">168,1</output><span>km</span></p></article><article class="metric metric-height"><div class="metric-label"><span>Wellenhöhe</span><span class="metric-symbol">H</span></div><p><output data-role="height">1,50</output><span>m</span></p></article></div>
+          <div class="region-controls"><div class="transport" aria-label="Steuerung Sri Lanka"><button data-role="start" class="button-primary" type="button" aria-label="Sri Lanka starten"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z"/></svg><span>Start</span></button><button data-role="pause" class="button-secondary" type="button" aria-label="Sri Lanka pausieren" disabled><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10"/></svg>Pause</button><button data-role="restart" class="button-icon" type="button" aria-label="Sri Lanka neu starten" title="Diese Welle zurücksetzen und pausieren"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7a6 6 0 1 1-.2 5M4 3v4h4"/></svg></button><span class="current-depth">Tiefe <output data-role="depth">2.000</output> m</span></div><div class="panel-parameters"><div class="parameter"><div class="parameter-heading"><label for="lanka-input-height">Eingangshöhe H₀</label><output for="lanka-input-height" data-role="input-height-value">1,5 <span>m</span></output></div><input id="lanka-input-height" data-role="input-height" type="range" min="0.5" max="4" step="0.5" value="1.5"><div class="range-labels"><span>0,5 m</span><span>4 m</span></div></div><div class="parameter"><div class="parameter-heading"><label for="lanka-period">Periode T</label><output for="lanka-period" data-role="period-value">20 <span>min</span></output></div><input id="lanka-period" data-role="period" type="range" min="10" max="30" step="1" value="20"><div class="range-labels"><span>10 min</span><span>30 min</span></div></div></div><div class="gain-strip"><span>Tiefenwirkung <strong data-role="shoaling-gain">1,00×</strong></span><span>Bündelung <strong data-role="geometry-gain">1,00×</strong></span><span>H = H₀ × beide Faktoren</span></div><p data-role="warning" class="model-warning" hidden>Die lineare Näherung wird im sehr flachen Wasser ungenau; Wellenbrechen ist nicht enthalten.</p></div>
+        </article>
+      </section>
+
+      <section class="coast-result" aria-labelledby="result-title"><div class="result-intro"><p class="eyebrow"><span></span> GLEICHE ENDTIEFE · 20 METER</p><h2 id="result-title">Der Unterschied<br>am Küstenpunkt.</h2><p id="result-explanation">Die Eingangswelle und die angenommene Bündelung tragen zum Unterschied bei.</p><span class="result-caveat">Modellwerte · keine Messhöhen von 2004</span></div><div class="result-bars"><div class="result-row"><div><span class="result-dot banda-dot"></span><span>Banda Aceh</span><output id="banda-coast-height">11,77 m</output></div><div class="bar-track"><span id="banda-bar"></span></div></div><div class="result-row"><div><span class="result-dot lanka-dot"></span><span>Sri Lanka · Kalmunai</span><output id="lanka-coast-height">4,24 m</output></div><div class="bar-track"><span id="lanka-bar"></span></div></div></div><div class="height-ratio"><output id="coast-ratio">2,77×</output><span id="ratio-label">höhere Welle vor Banda Aceh<br>im gewählten Szenario</span></div></section>
+
+      <section id="modell" class="comparison-model" aria-labelledby="model-title"><div class="model-heading"><p class="eyebrow"><span></span> DIE DREI EINFLÜSSE</p><h2 id="model-title">Küstenform ist ein Teil der Erklärung.</h2><p>Quellanregung, Tiefenänderung und räumliche Bündelung wirken zusammen.</p></div><div class="explanation-grid"><article class="explanation-card"><span class="step-number">01 / EINGANGSWELLE</span><h3>Die ankommende Eingangswelle.</h3><p>Banda Aceh liegt näher an der Quellregion vor Sumatra. Sri Lanka wurde nach der Ausbreitung durch den Ozean getroffen. Quellabstrahlung und Ausbreitungsweg beeinflussen die ankommende Welle.</p><div class="assumption-box">Im regionalen Beispiel: <strong>3,0 m / 1,5 m</strong><span>Illustrative Eingangshöhen, keine Messwerte.</span></div></article><article class="explanation-card"><span class="step-number">02 / TIEFENPROFIL</span><h3>Flacher heißt langsamer.</h3><p>Das Profil bestimmt, wo die Welle langsamer und kürzer wird. Bei gleichen Anfangs- und Endtiefen ist der reine Green’sche Höhenfaktor am Ende gleich, auch wenn die Profile verschieden verlaufen.</p><div class="assumption-box">Beide Profile: <strong>2.000 m → 20 m</strong><span>Reiner Shoaling-Faktor am Endpunkt: 3,16×.</span></div></article><article class="explanation-card"><span class="step-number">03 / SEITLICHE GEOMETRIE</span><h3>Bündeln oder verteilen.</h3><p>Ein engeres Strahlenbündel konzentriert den Energiefluss. Ein breiteres verteilt ihn. Das stellt eine mögliche Wirkung von Küstenform und Brechung dar; die angenommene Bündelung ist separat abschaltbar.</p><div class="ray-illustration" aria-label="Schematische seitliche Konvergenz und Divergenz"><div><span>Banda Aceh · Annahme</span><svg viewBox="0 0 130 37" aria-hidden="true"><path d="M5 3C55 3 80 9 125 10M5 18h120M5 34C55 34 80 28 125 27"/></svg><strong>b / b₀ = 0,65</strong></div><div><span>Sri Lanka · Annahme</span><svg viewBox="0 0 130 37" aria-hidden="true"><path d="M5 10C55 10 80 3 125 3M5 18h120M5 27C55 27 80 34 125 34"/></svg><strong>b / b₀ = 1,25</strong></div></div></article></div></section>
+
+      <section class="comparison-equation" aria-label="Physikalische Beziehungen"><div><span class="formula">H = H₀ · (h₀ / h)<sup>¼</sup> · √(b₀ / b)</span><p>Energiefluss im Strahlenbündel: H² · c · b ≈ konstant</p></div><div><span class="formula">c = √(g · h)</span><span class="formula">λ = c · T</span><p>H = Scheitel-zu-Tal-Höhe · b = relative effektive Bündelbreite · T = Periode</p></div></section>
+
+      <div class="model-notes"><p><strong>Welche Küste wird verglichen?</strong> Banda Aceh steht hier für einen idealisierten Abschnitt im Raum der Stadt. Für Sri Lanka ist beispielhaft die Ostküste bei Kalmunai ausgewählt. Die Profile sind keine vermessenen Transekte; Banda Aceh wird nicht mit den Spitzenwerten der Westküste bei Lhoknga gleichgesetzt.</p><p><strong>Wellenhöhe ist nicht Run-up.</strong> Run-up bezeichnet die maximal erreichte Höhe über dem Meeresspiegel an Land. Die gezeigte Wellenhöhe H liegt auf dem Wasser bei mindestens 20 m Tiefe. Überflutung, Reflexion, Reibung und Wellenbrechen werden nicht berechnet.</p></div>
+      <details class="source-details"><summary>Modellannahmen und weiterführende Quellen</summary><div><p>Alle Tiefenstützpunkte, Eingangshöhen und Bündelbreiten dieses Vergleichs sind didaktische Annahmen. Die drei regionalen Unterschiede sind keine Kalibrierung anhand der Messdaten von 2004. Für eine Rekonstruktion wären vermessene Küstenprofile, ein Erdbebenquellmodell und regionale Validierungsdaten nötig.</p><p>Methodischer Hintergrund: <a href="https://raw.githubusercontent.com/clawpack/doc/master/doc/tsunamidata.rst" target="_blank" rel="noopener noreferrer">GeoClaw: Datenquellen und Pegelbezüge</a> und <a href="https://raw.githubusercontent.com/clawpack/doc/master/doc/geoclaw.rst" target="_blank" rel="noopener noreferrer">GeoClaw: Tsunamimodellierung</a>.</p><p>Weiterführende Feldstudien: <a href="https://doi.org/10.1785/gssrl.76.3.312" target="_blank" rel="noopener noreferrer">Borrero (2005): Northern Sumatra and Banda Aceh</a>; <a href="https://doi.org/10.1126/science.1110730" target="_blank" rel="noopener noreferrer">Liu et al. (2005): International Tsunami Survey Team in Sri Lanka</a>. Die Messwerte dieser Studien wurden für dieses Modell nicht übernommen.</p><p>Das Green’sche Gesetz setzt langsam variierende Tiefe und Bündelbreite voraus. Bei schnellen Profiländerungen und langen Wellen bleibt dieser Ansatz qualitativ. Die Bündelbreiten werden vorgegeben, nicht aus der Küstenform berechnet. Im sehr flachen Wasser kann die lineare Näherung ungenau werden. Der Hinweis bei H/h > 0,2 ist ein didaktischer Modellhinweis, kein berechnetes Brechkriterium. Gleiche Eingangswellen und ausgeschaltete seitliche Bündelung ergeben an beiden Endpunkten die gleiche Höhe.</p></div></details>
+    </main>
+    <footer class="site-footer"><span>Shoaling Lab<span class="brand-dot">.</span></span><span>Unterschiede verstehen.</span><span>120 km je Modellprofil · historisch orientiert, idealisiert</span></footer>
+    <noscript><div class="noscript-message">Bitte aktiviere JavaScript, um die beiden Wellen zu vergleichen.</div></noscript>
+  <script>
+(function (root, factory) {
+  "use strict";
+
+  const physics = factory();
+  if (typeof module === "object" && module.exports) module.exports = physics;
+  root.RegionalShoaling = physics;
+})(typeof globalThis !== "undefined" ? globalThis : this, function () {
+  "use strict";
+
+  const GRAVITY = 9.81;
+  const DEEP_DEPTH = 2000;
+  const SHALLOW_DEPTH = 20;
+  const DISTANCE = 120000;
+  const DEFAULTS = Object.freeze({ incomingHeight: 2, period: 1200, geometryEffect: true });
+
+  function profile(points) {
+    return Object.freeze(points.map(([position, depth]) => Object.freeze({ position, depth })));
+  }
+
+  // These are deliberately schematic profiles, not measured bathymetry or a
+  // reconstruction of a 2004 transect. Both end at the same 20 m water depth.
+  const PRESETS = Object.freeze({
+    bandaAceh: Object.freeze({
+      id: "bandaAceh",
+      name: "Banda Aceh · Nordwest-Sumatra",
+      shortName: "Banda Aceh",
+      profile: profile([[0, 2000], [0.30, 1800], [0.62, 300], [0.80, 70], [1, 20]]),
+      endpointRayWidth: 0.65,
+      incomingHeight: 3,
+      description: "Schematischer Küstentransekt: frühere Abflachung und längeres flaches Endsegment.",
+      geometryDescription: "Illustrative Konvergenz: effektive Bündelbreite nimmt von 1 auf 0,65 ab.",
+    }),
+    sriLanka: Object.freeze({
+      id: "sriLanka",
+      name: "Sri Lanka · Ostküste bei Kalmunai",
+      shortName: "Sri Lanka",
+      profile: profile([[0, 2000], [0.58, 1850], [0.84, 350], [0.95, 100], [1, 20]]),
+      endpointRayWidth: 1.25,
+      incomingHeight: 1.5,
+      description: "Schematischer Küstentransekt: spätere Abflachung und kürzeres flaches Endsegment.",
+      geometryDescription: "Illustrative Divergenz: effektive Bündelbreite nimmt von 1 auf 1,25 zu.",
+    }),
+  });
+
+  // A change in incident forcing must remain separate from local shoaling.
+  // The regional input heights illustrate this distinction; they are not
+  // observations of incoming wave heights at these offshore model endpoints.
+  const MODE_PRESETS = Object.freeze({
+    equal: Object.freeze({
+      bandaAceh: Object.freeze({ ...DEFAULTS }),
+      sriLanka: Object.freeze({ ...DEFAULTS }),
+    }),
+    regional: Object.freeze({
+      bandaAceh: Object.freeze({ ...DEFAULTS, incomingHeight: 3 }),
+      sriLanka: Object.freeze({ ...DEFAULTS, incomingHeight: 1.5 }),
+    }),
+  });
+
+  function resolveRegion(region) {
+    if (region && typeof region === "object") region = region.id;
+    const aliases = { BandaAceh: "bandaAceh", SriLanka: "sriLanka", "banda-aceh": "bandaAceh", "sri-lanka": "sriLanka" };
+    const key = aliases[region] || region;
+    if (!Object.prototype.hasOwnProperty.call(PRESETS, key)) {
+      throw new RangeError("Unbekannte Modellregion: " + String(region));
+    }
+    return PRESETS[key];
+  }
+
+  function normalizeSettings(overrides) {
+    const input = overrides || {};
+    const incomingHeight = input.incomingHeight === undefined ? DEFAULTS.incomingHeight : Number(input.incomingHeight);
+    const period = input.period === undefined ? DEFAULTS.period : Number(input.period);
+    const geometryEffect = input.geometryEffect === undefined ? DEFAULTS.geometryEffect : input.geometryEffect;
+    if (!Number.isFinite(incomingHeight) || incomingHeight < 0) {
+      throw new RangeError("Die Eingangswellenhöhe muss endlich und nicht negativ sein.");
+    }
+    if (!Number.isFinite(period) || period <= 0) {
+      throw new RangeError("Die Wellenperiode muss endlich und positiv sein.");
+    }
+    if (typeof geometryEffect !== "boolean") {
+      throw new TypeError("geometryEffect muss true oder false sein.");
+    }
+    return Object.freeze({ incomingHeight, period, geometryEffect });
+  }
+
+  function settingsForMode(mode, region, overrides) {
+    const preset = resolveRegion(region);
+    if (!Object.prototype.hasOwnProperty.call(MODE_PRESETS, mode)) {
+      throw new RangeError("Unbekannter Vergleichsmodus: " + String(mode));
+    }
+    return normalizeSettings({ ...MODE_PRESETS[mode][preset.id], ...(overrides || {}) });
+  }
+
+  function clampPosition(position) {
+    const value = Number(position);
+    if (!Number.isFinite(value)) throw new RangeError("Die Position muss endlich sein.");
+    return Math.max(0, Math.min(1, value));
+  }
+
+  // Shape-preserving cubic Hermite interpolation (weighted harmonic interior
+  // derivatives) keeps the depth decreasing smoothly without overshoot.
+  function profileSlopes(points) {
+    const intervals = [];
+    const secants = [];
+    for (let index = 0; index < points.length - 1; index += 1) {
+      intervals.push(points[index + 1].position - points[index].position);
+      secants.push((points[index + 1].depth - points[index].depth) / intervals[index]);
+    }
+    const slopes = [0];
+    for (let index = 1; index < points.length - 1; index += 1) {
+      const left = intervals[index - 1];
+      const right = intervals[index];
+      const weightLeft = 2 * right + left;
+      const weightRight = right + 2 * left;
+      slopes.push((weightLeft + weightRight) /
+        (weightLeft / secants[index - 1] + weightRight / secants[index]));
+    }
+    slopes.push(0);
+    return slopes;
+  }
+
+  const slopesByRegion = Object.fromEntries(Object.values(PRESETS).map((preset) => [preset.id, profileSlopes(preset.profile)]));
+
+  function profileDepth(position, preset) {
+    if (position === 0) return DEEP_DEPTH;
+    if (position === 1) return SHALLOW_DEPTH;
+    const points = preset.profile;
+    let lower = 0;
+    while (position > points[lower + 1].position) lower += 1;
+    const left = points[lower];
+    const right = points[lower + 1];
+    const width = right.position - left.position;
+    const t = (position - left.position) / width;
+    const t2 = t * t;
+    const t3 = t2 * t;
+    const slopes = slopesByRegion[preset.id];
+    return (2 * t3 - 3 * t2 + 1) * left.depth +
+      (t3 - 2 * t2 + t) * width * slopes[lower] +
+      (-2 * t3 + 3 * t2) * right.depth +
+      (t3 - t2) * width * slopes[lower + 1];
+  }
+
+  /** Position is a fraction 0…1 of the common 120 km model transect. */
+  function depthAt(position, region) {
+    return profileDepth(clampPosition(position), resolveRegion(region));
+  }
+
+  /** Relative effective ray-bundle width b/b0, with b0 = 1 offshore. */
+  function rayWidthAt(position, region, enabled = true) {
+    const preset = resolveRegion(region);
+    const x = clampPosition(position);
+    if (typeof enabled !== "boolean") throw new TypeError("enabled muss true oder false sein.");
+    if (!enabled) return 1;
+    // Lateral convergence/divergence builds mainly along the coastal end of
+    // the transect. This is an assumed geometric effect, not a slope multiplier.
+    const t = Math.max(0, (x - 0.35) / 0.65);
+    const blend = t * t * (3 - 2 * t);
+    return 1 + (preset.endpointRayWidth - 1) * blend;
+  }
+
+  function valuesAt(position, region, overrides) {
+    const preset = resolveRegion(region);
+    const settings = normalizeSettings(overrides);
+    const x = clampPosition(position);
+    const depth = profileDepth(x, preset);
+    const speed = Math.sqrt(GRAVITY * depth);
+    const shoalingGain = Math.pow(DEEP_DEPTH / depth, 0.25);
+    const rayWidth = rayWidthAt(x, preset, settings.geometryEffect);
+    const geometryGain = Math.sqrt(1 / rayWidth);
+    const amplitude = settings.incomingHeight / 2 * shoalingGain * geometryGain;
+    const waveHeight = 2 * amplitude;
+    return {
+      position: x,
+      distance: x * DISTANCE,
+      depth,
+      speed,
+      wavelength: speed * settings.period,
+      amplitude,
+      waveHeight,
+      shoalingGain,
+      geometryGain,
+      rayWidth,
+      incomingHeight: settings.incomingHeight,
+      relativeHeight: waveHeight / depth,
+      // This is an indication of model limitations, not a breaking criterion.
+      nonlinearWarning: waveHeight / depth > 0.2,
+    };
+  }
+
+  /** Integrate ds/c along this local transect; this is not the 2004 basin travel time. */
+  function createJourney(region, overrides, requestedSamples = 2400) {
+    const preset = resolveRegion(region);
+    const settings = normalizeSettings(overrides);
+    const requested = Number(requestedSamples);
+    if (!Number.isFinite(requested) || requested < 2) {
+      throw new RangeError("Die Zahl der Integrationsschritte muss mindestens 2 sein.");
+    }
+    const samples = Math.min(20000, Math.floor(requested));
+    const times = new Float64Array(samples + 1);
+    const distanceStep = DISTANCE / samples;
+    let previousSlowness = 1 / Math.sqrt(GRAVITY * DEEP_DEPTH);
+    for (let index = 1; index <= samples; index += 1) {
+      const slowness = 1 / Math.sqrt(GRAVITY * profileDepth(index / samples, preset));
+      times[index] = times[index - 1] + distanceStep * (previousSlowness + slowness) / 2;
+      previousSlowness = slowness;
+    }
+    const totalTime = times[samples];
+    return Object.freeze({
+      region: preset.id,
+      settings,
+      distance: DISTANCE,
+      totalTime,
+      travelTime(position) {
+        const fractionalIndex = clampPosition(position) * samples;
+        const lower = Math.floor(fractionalIndex);
+        if (lower >= samples) return totalTime;
+        return times[lower] + (fractionalIndex - lower) * (times[lower + 1] - times[lower]);
+      },
+      positionAtTime(seconds) {
+        const time = Number(seconds);
+        if (!Number.isFinite(time)) throw new RangeError("Die Reisezeit muss endlich sein.");
+        if (time <= 0) return 0;
+        if (time >= totalTime) return 1;
+        let lower = 0;
+        let upper = samples;
+        while (upper - lower > 1) {
+          const midpoint = Math.floor((lower + upper) / 2);
+          if (times[midpoint] <= time) lower = midpoint;
+          else upper = midpoint;
+        }
+        return (lower + (time - times[lower]) / (times[upper] - times[lower])) / samples;
+      },
+    });
+  }
+
+  return Object.freeze({
+    GRAVITY, DEEP_DEPTH, SHALLOW_DEPTH, DISTANCE,
+    DEFAULTS, DEFAULT_PARAMS: DEFAULTS, defaultParams: DEFAULTS,
+    PRESETS, presets: PRESETS, REGIONS: PRESETS, MODE_PRESETS,
+    normalizeSettings, settingsForMode, resolveRegion,
+    depthAt, rayWidthAt, valuesAt, createJourney,
+  });
+});
+
+</script>
+<script>
+/* Independent wave journeys; common spatial, height and model-time scales. */
+(function () {
+  "use strict";
+
+  const physics = window.RegionalShoaling;
+  const $ = (id) => document.getElementById(id);
+  const format = (value, digits = 0) => new Intl.NumberFormat("de-DE", {
+    minimumFractionDigits: digits, maximumFractionDigits: digits,
+  }).format(value);
+  let mode = "regional";
+  let timeScale = 90;
+  let frameId = null;
+  let previousFrame = null;
+  let lastUiFrame = -Infinity;
+
+  const states = Array.from(document.querySelectorAll("[data-region]")).map((panel) => {
+    const nodes = Object.fromEntries(Array.from(panel.querySelectorAll("[data-role]")).map((node) => [node.dataset.role, node]));
+    const region = panel.dataset.region;
+    const settings = physics.settingsForMode(mode, region);
+    return {
+      region, panel, nodes, settings,
+      journey: physics.createJourney(region, settings),
+      time: 0, running: false, hasStarted: false,
+      canvas: nodes.canvas, ctx: nodes.canvas.getContext("2d"),
+      width: 0, height: 0, samples: [],
+      color: region === "bandaAceh" ? "#d5ef89" : "#8acbd2",
+    };
+  });
+
+  function rangeFill(input) {
+    const value = (Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min)) * 100;
+    input.style.setProperty("--range-fill", value + "%");
+  }
+
+  function clock(seconds) {
+    const value = Math.max(0, Math.floor(seconds));
+    return Math.floor(value / 60) + ":" + String(value % 60).padStart(2, "0");
+  }
+
+  function updateRegion(state) {
+    const position = state.journey.positionAtTime(state.time);
+    const values = physics.valuesAt(position, state.region, state.settings);
+    const n = state.nodes;
+    const complete = state.time >= state.journey.totalTime;
+    n.speed.textContent = format(values.speed * 3.6);
+    n.wavelength.textContent = format(values.wavelength / 1000, 1);
+    n.height.textContent = format(values.waveHeight, 2);
+    n.depth.textContent = format(values.depth);
+    n.time.textContent = clock(state.time) + " / " + clock(state.journey.totalTime) + " min";
+    n.distance.textContent = format(values.distance / 1000) + " von 120 km";
+    n.progress.value = String(state.time / state.journey.totalTime * 1000);
+    n.progress.setAttribute("aria-valuetext", format(values.distance / 1000) + " Kilometer, Wassertiefe " + format(values.depth) + " Meter");
+    rangeFill(n.progress);
+    n["shoaling-gain"].textContent = format(values.shoalingGain, 2) + "×";
+    n["geometry-gain"].textContent = format(values.geometryGain, 2) + "×";
+    n.warning.hidden = !values.nonlinearWarning;
+    n["status-text"].textContent = complete ? "Küste erreicht" : state.running ? "Läuft" : state.hasStarted ? "Pausiert" : "Bereit";
+    n.status.classList.toggle("running", state.running);
+    n.status.classList.toggle("complete", complete);
+    n.start.disabled = state.running;
+    n.pause.disabled = !state.running;
+    n.start.querySelector("span").textContent = complete ? "Erneut" : state.hasStarted ? "Weiter" : "Start";
+    n.start.setAttribute("aria-label", physics.PRESETS[state.region].shortName + (complete ? " erneut starten" : state.hasStarted ? " fortsetzen" : " starten"));
+    n["input-height"].value = String(state.settings.incomingHeight);
+    n.period.value = String(state.settings.period / 60);
+    n["input-height-value"].innerHTML = format(state.settings.incomingHeight, 1) + " <span>m</span>";
+    n["period-value"].innerHTML = format(state.settings.period / 60) + " <span>min</span>";
+    n["input-height"].setAttribute("aria-valuetext", format(state.settings.incomingHeight, 1) + " Meter");
+    n.period.setAttribute("aria-valuetext", format(state.settings.period / 60) + " Minuten");
+    rangeFill(n["input-height"]); rangeFill(n.period);
+    state.canvas.setAttribute("aria-label", physics.PRESETS[state.region].shortName + ": " + format(values.depth) + " Meter Wassertiefe, " + format(values.speed * 3.6) + " Kilometer pro Stunde, " + format(values.wavelength / 1000, 1) + " Kilometer Wellenlänge, " + format(values.waveHeight, 2) + " Meter Modellwellenhöhe. Schematisches Profil mit überzeichneter Wellenhöhe.");
+  }
+
+  function updateSummary() {
+    const [aceh, lanka] = states.map((state) => physics.valuesAt(1, state.region, state.settings));
+    const largest = Math.max(aceh.waveHeight, lanka.waveHeight);
+    $("banda-coast-height").textContent = format(aceh.waveHeight, 2) + " m";
+    $("lanka-coast-height").textContent = format(lanka.waveHeight, 2) + " m";
+    $("banda-bar").style.width = aceh.waveHeight / largest * 100 + "%";
+    $("lanka-bar").style.width = lanka.waveHeight / largest * 100 + "%";
+    const ratio = aceh.waveHeight / lanka.waveHeight;
+    if (Math.abs(ratio - 1) < 1e-8) {
+      $("coast-ratio").textContent = "1,00×";
+      $("ratio-label").innerHTML = "Gleiche Endhöhe<br>bei gleicher Eingangswelle";
+    } else {
+      $("coast-ratio").textContent = format(ratio > 1 ? ratio : 1 / ratio, 2) + "×";
+      $("ratio-label").innerHTML = "höhere Welle vor " + (ratio > 1 ? "Banda Aceh" : "Sri Lanka") + "<br>im gewählten Szenario";
+    }
+    const equal = mode === "equal";
+    const geometry = $("geometry").checked;
+    $("result-explanation").textContent = equal
+      ? geometry ? "Bei gleicher Eingangswelle entsteht der Höhenunterschied hier durch die angenommene seitliche Bündelung." : "Trotz verschiedener Profile bleibt die Endhöhe gleich: gleiche Eingangswelle, gleiche Endtiefe, keine seitliche Bündelung."
+      : geometry ? "Eingangshöhe und angenommene seitliche Bündelung tragen hier zum Höhenunterschied bei." : "Ohne seitliche Bündelung entsteht der Unterschied am Endpunkt aus den unterschiedlichen Eingangshöhen.";
+    $("mode-description").textContent = equal
+      ? "Höhen- und Periodenregler sind gekoppelt. Start, Pause und Zeitleisten bleiben unabhängig."
+      : "Eingangshöhen sind illustrative Annahmen. Jede Welle lässt sich separat anpassen; Moduswechsel setzt beide Wellen zurück.";
+    document.body.classList.toggle("geometry-disabled", !geometry);
+  }
+
+  function updateAll() { states.forEach(updateRegion); updateSummary(); }
+
+  // The surface displacement has exactly the same pixel/metre factor in both
+  // panels, so the taller model wave is visibly taller at equal endpoint depths.
+  function commonAmplitudeScale() {
+    const maximum = Math.max(...states.map((state) => physics.valuesAt(1, state.region, state.settings).amplitude));
+    return Math.min(17, 43 / maximum);
+  }
+
+  function geometry(state) {
+    const compact = state.width < 430;
+    return {
+      left: compact ? 28 : 38,
+      right: state.width - (compact ? 28 : 38),
+      waterline: state.height * .38,
+      floor: state.height * .79,
+      compact,
+    };
+  }
+
+  function bed(depth, g) {
+    return g.waterline + 56 + (g.floor - g.waterline - 56) * Math.pow(depth / physics.DEEP_DEPTH, .75);
+  }
+
+  function rebuildSamples(state) {
+    const count = Math.max(300, Math.ceil(state.width));
+    state.samples = Array.from({ length: count + 1 }, (_, index) => {
+      const x = index / count;
+      const values = physics.valuesAt(x, state.region, state.settings);
+      return { x, depth: values.depth, amplitude: values.amplitude, arrival: state.journey.travelTime(x) };
+    });
+  }
+
+  function resize(state) {
+    const bounds = state.canvas.getBoundingClientRect();
+    state.width = bounds.width; state.height = bounds.height;
+    const density = Math.min(window.devicePixelRatio || 1, 2);
+    state.canvas.width = Math.round(state.width * density);
+    state.canvas.height = Math.round(state.height * density);
+    state.ctx.setTransform(density, 0, 0, density, 0, 0);
+    rebuildSamples(state); draw(state);
+  }
+
+  function label(ctx, content, x, y, size, color, align = "left", weight = "400") {
+    ctx.font = weight + " " + size + "px Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+    ctx.textAlign = align; ctx.fillStyle = color; ctx.fillText(content, x, y);
+  }
+
+  function arrow(ctx, x1, y1, x2, y2, color, both = false) {
+    ctx.strokeStyle = color; ctx.lineWidth = .8;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const tip = (x, y, theta) => {
+      ctx.beginPath(); ctx.moveTo(x - 3 * Math.cos(theta - .6), y - 3 * Math.sin(theta - .6));
+      ctx.lineTo(x, y); ctx.lineTo(x - 3 * Math.cos(theta + .6), y - 3 * Math.sin(theta + .6)); ctx.stroke();
+    };
+    tip(x2, y2, angle); if (both) tip(x1, y1, angle + Math.PI);
+  }
+
+  function draw(state) {
+    const { ctx, width, height, samples } = state;
+    if (!width || !height || !ctx) return;
+    const g = geometry(state);
+    const span = g.right - g.left;
+    const position = state.journey.positionAtTime(state.time);
+    const current = physics.valuesAt(position, state.region, state.settings);
+    const scale = commonAmplitudeScale();
+    const crestX = g.left + position * span;
+    const crestY = g.waterline - current.amplitude * scale;
+    const surface = samples.map((sample) => {
+      const offset = (sample.arrival - state.time) / state.settings.period;
+      const fade = Math.max(0, Math.abs(offset) - .55);
+      const envelope = Math.exp(-.5 * Math.pow(fade / .18, 2));
+      return { x: g.left + sample.x * span, y: g.waterline - sample.amplitude * scale * Math.cos(2 * Math.PI * offset) * envelope };
+    });
+
+    ctx.clearRect(0, 0, width, height);
+    const background = ctx.createLinearGradient(0, 0, width, height);
+    background.addColorStop(0, "#092a36"); background.addColorStop(1, "#103843");
+    ctx.fillStyle = background; ctx.fillRect(0, 0, width, height);
+    for (let index = 0; index < 4; index += 1) {
+      const y = g.waterline + index * (g.floor - g.waterline) / 3;
+      ctx.strokeStyle = "rgba(162,204,204,.07)"; ctx.lineWidth = .7;
+      ctx.beginPath(); ctx.moveTo(15, y); ctx.lineTo(width - 15, y); ctx.stroke();
+    }
+
+    const land = ctx.createLinearGradient(0, g.waterline, 0, height);
+    land.addColorStop(0, "#839179"); land.addColorStop(.4, "#526960"); land.addColorStop(1, "#354e4d");
+    ctx.fillStyle = land;
+    ctx.beginPath(); ctx.moveTo(0, bed(physics.DEEP_DEPTH, g));
+    for (const sample of samples) ctx.lineTo(g.left + sample.x * span, bed(sample.depth, g));
+    ctx.bezierCurveTo(g.right + 8, g.waterline + 24, width - 12, g.waterline - 25, width, g.waterline - 28);
+    ctx.lineTo(width, height); ctx.lineTo(0, height); ctx.closePath(); ctx.fill();
+
+    const water = ctx.createLinearGradient(0, g.waterline - 50, 0, g.floor);
+    water.addColorStop(0, "rgba(110,186,187,.3)"); water.addColorStop(.4, "rgba(49,125,140,.27)"); water.addColorStop(1, "rgba(16,73,94,.6)");
+    ctx.fillStyle = water; ctx.beginPath(); ctx.moveTo(0, surface[0].y);
+    for (const point of surface) ctx.lineTo(point.x, point.y);
+    ctx.lineTo(g.right, bed(physics.SHALLOW_DEPTH, g));
+    for (let index = samples.length - 1; index >= 0; index -= 1) ctx.lineTo(g.left + samples[index].x * span, bed(samples[index].depth, g));
+    ctx.lineTo(0, bed(physics.DEEP_DEPTH, g)); ctx.closePath(); ctx.fill();
+
+    ctx.beginPath(); ctx.moveTo(0, bed(physics.DEEP_DEPTH, g));
+    for (const sample of samples) ctx.lineTo(g.left + sample.x * span, bed(sample.depth, g));
+    ctx.bezierCurveTo(g.right + 8, g.waterline + 24, width - 12, g.waterline - 25, width, g.waterline - 28);
+    ctx.strokeStyle = "#9eae96"; ctx.lineWidth = 1; ctx.stroke();
+    ctx.setLineDash([3, 4]); ctx.strokeStyle = "rgba(188,217,213,.25)"; ctx.lineWidth = .7;
+    ctx.beginPath(); ctx.moveTo(15, g.waterline); ctx.lineTo(g.right, g.waterline); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(0, surface[0].y);
+    for (const point of surface) ctx.lineTo(point.x, point.y);
+    ctx.strokeStyle = "#82bdc0"; ctx.lineWidth = 1.6; ctx.stroke();
+    ctx.beginPath(); let started = false;
+    for (let index = 0; index < samples.length; index += 1) {
+      if (Math.abs(samples[index].arrival - state.time) <= state.settings.period * .1) {
+        if (started) ctx.lineTo(surface[index].x, surface[index].y);
+        else { ctx.moveTo(surface[index].x, surface[index].y); started = true; }
+      }
+    }
+    ctx.strokeStyle = state.color; ctx.lineWidth = 2; ctx.stroke();
+
+    ctx.setLineDash([3, 4]); ctx.strokeStyle = state.region === "bandaAceh" ? "rgba(213,239,137,.25)" : "rgba(138,203,210,.3)";
+    ctx.beginPath(); ctx.moveTo(crestX, g.waterline + 4); ctx.lineTo(crestX, bed(current.depth, g) - 4); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(crestX, crestY, 8, 0, Math.PI * 2); ctx.fillStyle = state.region === "bandaAceh" ? "rgba(213,239,137,.12)" : "rgba(138,203,210,.12)"; ctx.fill();
+    ctx.beginPath(); ctx.arc(crestX, crestY, 2.8, 0, Math.PI * 2); ctx.fillStyle = state.color; ctx.fill();
+    const crestLabelX = Math.max(g.left + 32, Math.min(g.right - 30, crestX));
+    label(ctx, "WELLENBERG", crestLabelX, crestY - 15, g.compact ? 6 : 7, state.color, "center", "500");
+    const side = crestX > g.right - 25 ? -1 : 1;
+    if (g.waterline - crestY > 6) {
+      arrow(ctx, crestX + side * 11, crestY + 2, crestX + side * 11, g.waterline, state.color, true);
+      label(ctx, "A", crestX + side * 18, (g.waterline + crestY) / 2 + 3, 7, state.color, side > 0 ? "left" : "right");
+    }
+
+    const localWavelength = current.wavelength / physics.DISTANCE * span;
+    const lambdaY = height * .14;
+    if (localWavelength <= span) {
+      const lambdaLeft = Math.min(Math.max(g.left, crestX - localWavelength / 2), g.right - localWavelength);
+      arrow(ctx, lambdaLeft, lambdaY, lambdaLeft + localWavelength, lambdaY, "#67949c", true);
+      label(ctx, "lokale λ  " + format(current.wavelength / 1000, 1) + " km", lambdaLeft + localWavelength / 2, lambdaY - 7, g.compact ? 6 : 7, "#a2c0c4", "center");
+    } else {
+      label(ctx, "λ = " + format(current.wavelength / 1000, 1) + " km · länger als die 120-km-Modellstrecke", width / 2, lambdaY - 6, g.compact ? 5.5 : 7, "#8fb1b8", "center");
+    }
+    label(ctx, "0 km", g.left, g.floor + 17, 7, "#a5b8a9");
+    label(ctx, "120 km · Küstenpunkt", g.right, g.floor + 17, 7, "#a5b8a9", "right");
+    const depthX = crestX > g.right - 65 ? crestX - 9 : crestX + 9;
+    label(ctx, "h = " + format(current.depth) + " m", depthX, Math.min(g.waterline + 80, bed(current.depth, g) - 8), 7, "#acc3bb", crestX > g.right - 65 ? "right" : "left");
+    if (!g.compact) {
+      const directionX = g.left + span * .45;
+      arrow(ctx, directionX - 16, g.waterline + 37, directionX + 16, g.waterline + 37, "#688e96");
+      label(ctx, "AUSBREITUNG", directionX, g.waterline + 49, 6, "#75949a", "center");
+    }
+  }
+
+  function drawAll() { states.forEach(draw); }
+
+  function stopLoopIfIdle() {
+    if (states.some((state) => state.running)) return;
+    if (frameId !== null) cancelAnimationFrame(frameId);
+    frameId = null; previousFrame = null;
+  }
+
+  function tick(timestamp) {
+    const delta = previousFrame === null ? 0 : Math.min((timestamp - previousFrame) / 1000, .1);
+    previousFrame = timestamp;
+    let completed = false;
+    for (const state of states) {
+      if (!state.running) continue;
+      state.time = Math.min(state.journey.totalTime, state.time + delta * timeScale);
+      if (state.time >= state.journey.totalTime) { state.running = false; completed = true; }
+    }
+    drawAll();
+    if (timestamp - lastUiFrame > 80 || completed) { updateAll(); lastUiFrame = timestamp; }
+    if (states.some((state) => state.running)) frameId = requestAnimationFrame(tick);
+    else { frameId = null; previousFrame = null; updateAll(); }
+  }
+
+  function start(state) {
+    if (state.running) return;
+    if (state.time >= state.journey.totalTime) state.time = 0;
+    state.running = true; state.hasStarted = true;
+    updateRegion(state); draw(state);
+    if (frameId === null) { previousFrame = null; frameId = requestAnimationFrame(tick); }
+  }
+
+  function pause(state) { state.running = false; updateRegion(state); stopLoopIfIdle(); }
+  function restart(state) { state.time = 0; state.running = false; state.hasStarted = false; updateRegion(state); draw(state); stopLoopIfIdle(); }
+
+  function changeParameters(changed) {
+    const updates = {
+      incomingHeight: Number(changed.nodes["input-height"].value),
+      period: Number(changed.nodes.period.value) * 60,
+      geometryEffect: $("geometry").checked,
+    };
+    for (const state of states) {
+      if (state !== changed && mode !== "equal") continue;
+      state.settings = physics.normalizeSettings(updates);
+      // The unchanged bathymetry retains the current position and travel time.
+      rebuildSamples(state);
+    }
+    updateAll(); drawAll();
+  }
+
+  for (const state of states) {
+    state.nodes.start.addEventListener("click", () => start(state));
+    state.nodes.pause.addEventListener("click", () => pause(state));
+    state.nodes.restart.addEventListener("click", () => restart(state));
+    state.nodes.progress.addEventListener("input", () => {
+      state.running = false; state.hasStarted = true;
+      state.time = Number(state.nodes.progress.value) / 1000 * state.journey.totalTime;
+      updateRegion(state); draw(state); stopLoopIfIdle();
+    });
+    state.nodes["input-height"].addEventListener("input", () => changeParameters(state));
+    state.nodes.period.addEventListener("input", () => changeParameters(state));
+    new ResizeObserver(() => resize(state)).observe(state.canvas);
+  }
+
+  document.querySelectorAll("[data-mode]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (mode === button.dataset.mode) return;
+      mode = button.dataset.mode;
+      document.querySelectorAll("[data-mode]").forEach((option) => option.setAttribute("aria-pressed", String(option === button)));
+      for (const state of states) {
+        state.settings = physics.settingsForMode(mode, state.region, { geometryEffect: $("geometry").checked });
+        state.time = 0; state.running = false; state.hasStarted = false;
+        rebuildSamples(state);
+      }
+      stopLoopIfIdle(); updateAll(); drawAll();
+    });
+  });
+
+  $("geometry").addEventListener("change", () => {
+    for (const state of states) {
+      state.settings = physics.normalizeSettings({ ...state.settings, geometryEffect: $("geometry").checked });
+      rebuildSamples(state);
+    }
+    updateAll(); drawAll();
+  });
+  document.querySelectorAll("[data-tempo]").forEach((button) => {
+    button.addEventListener("click", () => {
+      timeScale = Number(button.dataset.tempo);
+      document.querySelectorAll("[data-tempo]").forEach((option) => option.setAttribute("aria-pressed", String(option === button)));
+    });
+  });
+  $("compare-coast").addEventListener("click", () => {
+    for (const state of states) { state.time = state.journey.totalTime; state.running = false; state.hasStarted = true; }
+    stopLoopIfIdle(); updateAll(); drawAll();
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) return;
+    states.forEach((state) => { state.running = false; });
+    stopLoopIfIdle(); updateAll();
+  });
+
+  updateAll(); states.forEach(resize);
+})();
+
+</script>
+</body>
+</html>
